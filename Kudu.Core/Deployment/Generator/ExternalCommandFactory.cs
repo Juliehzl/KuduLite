@@ -69,6 +69,7 @@ namespace Kudu.Core.Deployment.Generator
             // Creates an executable pointing to cmd and the working directory being
             // the repository root
             var exe = new Executable(commandPath, workingDirectory, idleTimeout);
+            Console.WriteLine($"======commandPath: {commandPath}");
             exe.AddDeploymentSettingsAsEnvironmentVariables(_deploymentSettings);
             UpdateToDefaultIfNotSet(exe, WellKnownEnvironmentVariables.WebRootPath, _environment.WebRootPath, logger);
             UpdateToDefaultIfNotSet(exe, WellKnownEnvironmentVariables.MSBuildPath, PathUtilityFactory.Instance.ResolveMSBuildPath(), logger);

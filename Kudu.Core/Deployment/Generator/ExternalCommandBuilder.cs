@@ -84,6 +84,8 @@ namespace Kudu.Core.Deployment.Generator
         protected void RunCommand(DeploymentContext context, string command, bool ignoreManifest, string message = "Running deployment command...")
         {
             ILogger customLogger = context.Logger.Log(message);
+            customLogger.Log("OutputPath: " + context.OutputPath);
+            customLogger.Log("RepositoryPath: " + RepositoryPath);
             customLogger.Log("Command: " + command);
 
             // Creates an executable pointing to cmd and the working directory being
@@ -105,6 +107,9 @@ namespace Kudu.Core.Deployment.Generator
             {
                 exe.EnvironmentVariables[property.Key] = property.Value;
             }
+            customLogger.Log("OutputPath: " + context.OutputPath);
+            customLogger.Log("RepositoryPath: " + RepositoryPath);
+            customLogger.Log("Command: " + command);
 
             try
             {

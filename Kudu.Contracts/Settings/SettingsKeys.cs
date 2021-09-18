@@ -52,5 +52,7 @@
         public const string WebsiteHostname = "WEBSITE_HOSTNAME";
         public const string AuthEncryptionKey = "WEBSITE_AUTH_ENCRYPTION_KEY";
         public const string ContainerEncryptionKey = "CONTAINER_ENCRYPTION_KEY";
+        public const string PodDeploymentName = "POD_DEPLOYMENT_NAME";
+        public const string PodNamespace = "POD_NAMESPACE";
     }
 }

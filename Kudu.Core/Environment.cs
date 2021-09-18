@@ -153,7 +153,10 @@ namespace Kudu.Core
                 }
                 _sshKeyPath = Path.Combine(rootPath, path2, Constants.SSHKeyPath);
             }
+            Console.WriteLine($"============ScriptPATH: {_scriptPath}");
+            Console.WriteLine($"============binPath: {binPath}");
             _scriptPath = Path.Combine(binPath, Constants.ScriptsPath);
+
             _nodeModulesPath = Path.Combine(binPath, Constants.NodeModulesPath);
             _logFilesPath = Path.Combine(rootPath, Constants.LogFilesPath);
             _applicationLogFilesPath = Path.Combine(_logFilesPath, Constants.ApplicationLogFilesDirectory);

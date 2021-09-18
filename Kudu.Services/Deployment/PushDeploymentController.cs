@@ -27,6 +27,7 @@ using Kudu.Contracts.Deployment;
 using Kudu.Services.Util;
 using System.Text;
 using Kudu.Services.Arm;
+using Microsoft.Extensions.Primitives;
 
 namespace Kudu.Services.Deployment
 {
@@ -91,9 +92,10 @@ namespace Kudu.Services.Deployment
             {
                 var buildHeader = false;
 
-                if (HttpContext.Request.Headers.ContainsKey("SCM_DO_BUILD_DURING_DEPLOYMENT"))
+                var SCM_DO_BUILD_DURING_DEPLOYMENTHeader = HttpContext.Request.Headers.FirstOrDefault(kv => kv.Key.Equals("SCM_DO_BUILD_DURING_DEPLOYMENT", StringComparison.OrdinalIgnoreCase));
+                if (!SCM_DO_BUILD_DURING_DEPLOYMENTHeader.Equals(default(KeyValuePair<string, StringValues>)))
                 {
-                    string header = HttpContext.Request.Headers["SCM_DO_BUILD_DURING_DEPLOYMENT"];
+                    string header = SCM_DO_BUILD_DURING_DEPLOYMENTHeader.Value;
                     buildHeader = !String.IsNullOrEmpty(header) && (header == "1" || header.Equals(Boolean.TrueString, StringComparison.OrdinalIgnoreCase));
                 }
 

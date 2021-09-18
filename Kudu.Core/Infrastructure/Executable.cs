@@ -112,6 +112,8 @@ namespace Kudu.Core.Infrastructure
             {
                 using (var writer = new ProgressWriter())
                 {
+                    writer.WriteOutLine(arguments);
+                    logger.Log(arguments);
                     return ExecuteInternal(tracer,
                                            output =>
                                            {
@@ -209,14 +211,20 @@ namespace Kudu.Core.Infrastructure
             }
             catch (AggregateException ex)
             {
+                Console.WriteLine("error here ==================1");
                 foreach (var inner in ex.Flatten().InnerExceptions)
                 {
+                    Console.WriteLine($"{ex.StackTrace}");
+                    Console.WriteLine($"{ex.Message}");
                     onWriteError(inner.Message);
                 }
                 throw;
             }
             catch (Exception ex)
             {
+                Console.WriteLine("error here ==================2");
+                Console.WriteLine($"{ex.StackTrace}");
+                Console.WriteLine($"{ex.Message}");
                 onWriteError(ex.Message);
                 throw;
             }
@@ -284,6 +292,7 @@ namespace Kudu.Core.Infrastructure
 
         internal Process CreateProcess(string arguments)
         {
+            Console.WriteLine($"WorkingDirectory : {WorkingDirectory} {Path} {arguments}");
             var psi = new ProcessStartInfo
             {
                 FileName = Path,
@@ -307,6 +316,7 @@ namespace Kudu.Core.Infrastructure
             foreach (var pair in EnvironmentVariables)
             {
                 psi.EnvironmentVariables[pair.Key] = pair.Value;
+                Console.WriteLine($"Env : {pair.Key} {pair.Value}");
             }
 
             var process = new Process()

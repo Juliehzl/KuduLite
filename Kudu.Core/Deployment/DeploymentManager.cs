@@ -301,6 +301,19 @@ namespace Kudu.Core.Deployment
                         }
 
                         string appName = _environment.K8SEAppName;
+
+                        if (K8SEDeploymentHelper.IsBuildJob())
+                        {
+                            var userName = System.Environment.GetEnvironmentVariable(Constants.User);
+                            var password = System.Environment.GetEnvironmentVariable(Constants.Password);
+                            var dnsSuffix = System.Environment.GetEnvironmentVariable(Constants.DefaultDnsSuffix);
+
+                            ArtifactUploadHelper artifactUploadHelper = new ArtifactUploadHelper(appName, userName, password, dnsSuffix, changeSet.Id);
+                            string zipAppName = $"artifact.zip";
+                            var artifactFilePath = _environment.RepositoryPath + "/../artifacts/" + _environment.CurrId + "/" + zipAppName;
+                            await artifactUploadHelper.Upload(artifactFilePath);
+                        }
+                        
                         string repoUrl = deploymentInfo == null ? "empty" : deploymentInfo.RepositoryUrl;
                         if(deploymentInfo == null)
                         {
@@ -308,7 +321,7 @@ namespace Kudu.Core.Deployment
                         }
                         else
                         {
-                            DockerContainerRestartTrigger.RequestContainerRestart(_environment, RestartTriggerReason, deploymentInfo == null ? null : deploymentInfo.RepositoryUrl, deploymentInfo.TargetPath, appSettings:_appSettings);
+                            DockerContainerRestartTrigger.RequestContainerRestart(_environment, RestartTriggerReason, deploymentInfo.RepositoryUrl, deploymentInfo.TargetPath, appSettings:_appSettings);
                         }
                         logger.Log($"Deployment Pod Rollout Started! Use 'kubectl -n k8se-apps get pods {appName} --watch' to monitor the rollout status");
                         logger.Log($"Deployment Pod Rollout Started! Use kubectl watch deplotment {appName} to monitor the rollout status");

@@ -11,6 +11,7 @@ using System.Linq;
 using System.Runtime.Caching;
 using System.Text;
 using Microsoft.Extensions.Primitives;
+using Kudu.Contracts.Infrastructure;
 
 namespace Kudu.Core.K8SE
 {
@@ -45,6 +46,15 @@ namespace Kudu.Core.K8SE
             BuildCtlArgumentsHelper.AddAppNameArgument(cmd, appName);
             BuildCtlArgumentsHelper.AddAppPropertyArgument(cmd, "linuxFxVersion");
             return RunBuildCtlCommand(cmd.ToString(), "Retrieving framework info...");
+        }
+
+        public static string GetCustomConfigMap(string appName)
+        {
+            var cmd = new StringBuilder();
+            BuildCtlArgumentsHelper.AddBuildCtlCommand(cmd, "get");
+            BuildCtlArgumentsHelper.AddAppNameArgument(cmd, appName);
+            BuildCtlArgumentsHelper.AddAppPropertyArgument(cmd, "getCustomConfigMap");
+            return RunBuildCtlCommand(cmd.ToString(), "Retrieving custom ConfigMap...");
         }
 
         /// <summary>
@@ -247,6 +257,18 @@ namespace Kudu.Core.K8SE
         private static string GetBuildMetadataStr(BuildMetadata buildMetadata)
         {
             return $"{buildMetadata.AppName}|{buildMetadata.BuildVersion}|{System.Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(JsonConvert.SerializeObject(buildMetadata)))}";
+        }
+
+        public static bool IsBuildJob()
+        {
+            var vaule = System.Environment.GetEnvironmentVariable(Constants.IsBuildJob);
+            return StringUtils.IsTrueLike(vaule);
+        }
+
+        public static bool UseBuildJob()
+        {
+            var vaule = System.Environment.GetEnvironmentVariable(Constants.UseBuildJob);
+            return StringUtils.IsTrueLike(vaule);
         }
     }
 }

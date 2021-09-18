@@ -75,6 +75,27 @@ namespace Kudu.Core.Deployment.Generator
                 targetProjectPath = Path.GetFullPath(Path.Combine(repositoryRoot, targetProjectPath.TrimStart('/', '\\')));
             }
 
+            tracer.Trace("===========debug 1");
+            tracer.Trace($"===========settings.RunFromLocalZip() { settings.RunFromLocalZip()}");
+            tracer.Trace($"===========settings.DoBuildDuringDeployment() { settings.DoBuildDuringDeployment()}");
+
+            tracer.Trace($"===========start");
+            foreach (var sp in settings.SettingsProviders)
+            {
+                tracer.Trace($"==========={sp.GetType().ToString()}");
+                var kvs = sp.GetValues();
+                foreach (var kv in kvs)
+                {
+                    tracer.Trace($"==========={kv.Key} {kv.Value}");
+                }
+                tracer.Trace($"==========={sp.GetType().ToString()} End");
+            }
+            tracer.Trace($"===========end");
+
+            string enableOryxBuild = System.Environment.GetEnvironmentVariable("ENABLE_ORYX_BUILD");
+
+            tracer.Trace($"===========enableOryxBuild {enableOryxBuild}");
+
             if (settings.RunFromLocalZip())
             {
                 return new RunFromZipSiteBuilder();
@@ -86,7 +107,7 @@ namespace Kudu.Core.Deployment.Generator
                 return new BasicBuilder(_environment, settings, _propertyProvider, repositoryRoot, projectPath);
             }
 
-            string enableOryxBuild = System.Environment.GetEnvironmentVariable("ENABLE_ORYX_BUILD");
+            //string enableOryxBuild = System.Environment.GetEnvironmentVariable("ENABLE_ORYX_BUILD");
             if (!string.IsNullOrEmpty(enableOryxBuild) && (deploymentInfo != null && deploymentInfo.ShouldBuildArtifact) || settings.DoBuildDuringDeployment())
             {
                 if (StringUtils.IsTrueLike(enableOryxBuild))

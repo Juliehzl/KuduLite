@@ -37,6 +37,7 @@ namespace Kudu.Core.Deployment.Generator
             // Initialize Oryx Args.
             IOryxArguments args = OryxArgumentsFactory.CreateOryxArguments(environment);
 
+            Console.WriteLine($"{args.AppName}, {args.Language}, {args.PublishFolder}, {args.RunOryxBuild}, {args.Version}, {args.SkipKuduSync}, {args.VirtualEnv}");
             if (!args.SkipKuduSync)
             {
                 // Step 1: Run kudusync
